@@ -48,6 +48,9 @@ func usage(cliCommands map[string]cliCommand) error {
 	return nil
 }
 
+
+
+
 type Result struct {
 	Count    int        `json:"count"`
 	Next     string     `json:"next"`
@@ -59,8 +62,15 @@ type Location struct {
 	Name string `json:"name"`
 }
 
-func getLocations() []Location {
-	resp, err := http.Get("https://pokeapi.co/api/v2/location-area/")
+
+var (
+	result *Result
+)
+
+
+
+func getLocations(url string) []Location {
+	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("error getting location: %v", err)
 	}
@@ -71,11 +81,11 @@ func getLocations() []Location {
 		log.Fatal(err)
 	}
 
-	result := Result{}
 	err = json.Unmarshal(data, &result)
 	if err != nil {
 		log.Fatal(err)
 	}
+	
 	return result.Results
 }
 func printLocations(locations []Location) {
@@ -83,6 +93,36 @@ func printLocations(locations []Location) {
 		fmt.Println(location.Name)
 	}
 }
+
+func Map(action string) {
+	url := "https://pokeapi.co/api/v2/location-area/"
+
+	if action == "next" {
+		if  result ==  nil {
+			locations := getLocations(url)
+			printLocations(locations)
+		} else {
+			locations := getLocations(result.Next)
+			printLocations(locations)
+		}
+	} else {
+		
+		if  result == nil {
+			locations := getLocations(url)
+			printLocations(locations)
+		} else {
+			locations := getLocations(result.Previous)
+			printLocations(locations)
+		}
+	}
+
+	
+
+
+}
+
+
+
 
 func pokedexcli() {
 	cliCommands := map[string]cliCommand{
@@ -115,11 +155,9 @@ func pokedexcli() {
 		case "exit":
 			commandExit()
 		case "map":
-			locations := getLocations()
-			printLocations(locations)
+			Map("next")
 		case "mapb":
-			locations := getLocations() // result.previous
-			printLocations(locations)
+			Map("")
 		default:
 			usage(cliCommands)
 		}
