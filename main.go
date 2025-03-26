@@ -106,8 +106,7 @@ func Map(action string) {
 			printLocations(locations)
 		}
 	} else {
-		
-		if  result == nil {
+		if  result.Previous == "" {
 			locations := getLocations(url)
 			printLocations(locations)
 		} else {
@@ -115,10 +114,6 @@ func Map(action string) {
 			printLocations(locations)
 		}
 	}
-
-	
-
-
 }
 
 
