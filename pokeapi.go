@@ -23,8 +23,6 @@ var (
 	result *Result
 )
 
-
-
 func getLocations(url string) []Location {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -76,4 +74,3 @@ func MapBack() error {
 	}
 	return nil
 }
-

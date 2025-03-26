@@ -1,8 +1,8 @@
 package main
 
 import (
-	"strings"
 	"regexp"
+	"strings"
 )
 
 func removeDoubleSpace(str string) string {
