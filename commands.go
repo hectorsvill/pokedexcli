@@ -13,7 +13,7 @@ type CliCommand struct {
 	callback    func() error
 }
 
-func initCommands() error {
+func (cm CliCommand) Init() {
 	cliCommands = map[string]CliCommand{
 		"exit": {
 			name:        "exit",
@@ -36,7 +36,6 @@ func initCommands() error {
 			callback:    MapBack,
 		},
 	}
-	return nil
 }
 
 func commandExit() error {

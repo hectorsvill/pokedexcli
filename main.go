@@ -8,12 +8,18 @@ import (
 	"strings"
 )
 
+func init() {
+	CliCommand{}.Init()
+	PokeCache{}.Init()
+}
+
 func main() {
 	pokedexcli()
+	block := make(chan struct{})
+	<-block
 }
 
 func pokedexcli() {
-	initCommands()
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
