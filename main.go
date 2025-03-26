@@ -5,10 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
-	pokedexcli()
+	// pokedexcli()
+	str1 := "  foo   \bar     baz   "
+	fields1 := strings.Fields(str1)
+	fmt.Println(len(fields1))
+	fmt.Printf("Fields: %q\n", fields1) // Output: Fields: ["foo" "bar" "baz"]
+
 
 }
 
@@ -20,7 +26,7 @@ func pokedexcli() {
 		fmt.Print("pokedexcli > ")
 		scanner.Scan()
 		str := scanner.Text()
-		inputArr := cleanInput(str)
+		inputArr := strings.Fields(str)
 		command := inputArr[0]
 		if cmd, ok := cliCommands[command]; ok {
 			if err := cmd.callback(); err != nil {
