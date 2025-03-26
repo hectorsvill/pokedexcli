@@ -9,13 +9,7 @@ import (
 )
 
 func main() {
-	// pokedexcli()
-	str1 := "  foo   \bar     baz   "
-	fields1 := strings.Fields(str1)
-	fmt.Println(len(fields1))
-	fmt.Printf("Fields: %q\n", fields1) // Output: Fields: ["foo" "bar" "baz"]
-
-
+	pokedexcli()
 }
 
 func pokedexcli() {
