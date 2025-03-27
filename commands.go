@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"errors"
 )
 
 var cliCommands map[string]CliCommand
@@ -62,3 +63,37 @@ func Usage() error {
 	return nil
 }
 
+
+func MapNext() error {
+	if result == nil {
+		locations := getLocations(locations_url)
+		printLocations(locations)
+	} else {
+		locations := getLocations(result.Next)
+		printLocations(locations)
+	}
+	return nil
+}
+
+func MapBack() error {
+	if result.Previous == "" {
+		locations := getLocations(locations_url)
+		printLocations(locations)
+	} else {
+		locations := getLocations(result.Previous)
+		printLocations(locations)
+	}
+	return nil
+}
+
+
+func Explore() error {
+	if len(InputArr) != 2 {
+		return errors.New("Explore(): input error")
+	}
+	pokemons := getLocation(InputArr[1])
+	for _, p := range pokemons {
+		fmt.Printf("- %v\n", p.Name)
+	}
+	return nil
+}

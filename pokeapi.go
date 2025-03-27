@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"sync"
 	"time"
-	"errors"
 )
 
 
@@ -66,30 +65,6 @@ func printLocations(locations []Location) {
 	}
 }
 
-func MapNext() error {
-	if result == nil {
-		locations := getLocations(locations_url)
-		printLocations(locations)
-	} else {
-		locations := getLocations(result.Next)
-		printLocations(locations)
-	}
-	return nil
-}
-
-func MapBack() error {
-	if result.Previous == "" {
-		locations := getLocations(locations_url)
-		printLocations(locations)
-	} else {
-		locations := getLocations(result.Previous)
-		printLocations(locations)
-	}
-	return nil
-}
-
-
-
 func getLocation(location string) []Pokemon {
 	location = locations_url + location
 	mux := &sync.RWMutex{}
@@ -134,16 +109,7 @@ func getLocation(location string) []Pokemon {
 }
 
 
-func Explore() error {
-	if len(InputArr) != 2 {
-		return errors.New("Explore(): input error")
-	}
-	pokemons := getLocation(InputArr[1])
-	for _, p := range pokemons {
-		fmt.Printf("- %v\n", p.Name)
-	}
-	return nil
-}
+
 
 
 
