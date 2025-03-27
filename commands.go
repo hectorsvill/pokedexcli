@@ -1,17 +1,17 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
-	"errors"
 )
 
 var cliCommands map[string]CliCommand
 
 type CliCommand struct {
-	name        string
-	description string
-	callback    func() error
+	name           string
+	description    string
+	callback       func() error
 	callbackWinput func(string) error
 }
 
@@ -42,6 +42,11 @@ func (cm CliCommand) Init() {
 			description: "print pokemon in location",
 			callback:    Explore,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "print pokemon stats",
+			callback:    Inspect,
+		},
 	}
 }
 
@@ -62,7 +67,6 @@ func Usage() error {
 	}
 	return nil
 }
-
 
 func MapNext() error {
 	if result == nil {
@@ -86,7 +90,6 @@ func MapBack() error {
 	return nil
 }
 
-
 func Explore() error {
 	if len(InputArr) != 2 {
 		return errors.New("Explore(): input error")
@@ -95,6 +98,19 @@ func Explore() error {
 	fmt.Println()
 	for _, p := range pokemons {
 		fmt.Printf("- %v\n", p.Name)
+	}
+	return nil
+}
+
+
+func Inspect() error {
+	if len(InputArr) != 2 {
+		return errors.New("Inspect(): input error")
+	}
+
+	stats := getstats(InputArr[1])
+	for _, stat := range stats {
+		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
 	}
 	return nil
 }

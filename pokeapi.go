@@ -10,52 +10,45 @@ import (
 	"time"
 )
 
-
 var (
-	result *Result
+	result           *Result
 	encountersResult *PokemonEncounterResult
-	locations_url = "https://pokeapi.co/api/v2/location-area/"
+	statsResult      *StatsResult
+	locations_url    = "https://pokeapi.co/api/v2/location-area/"
+	pokemon_url      = "https://pokeapi.co/api/v2/pokemon/"
 )
 
 func getLocations(locations_url string) []Location {
 	mux := &sync.RWMutex{}
-
 	if PCache.Exist(locations_url) {
 		entry, err := PCache.Get(locations_url, mux)
-
 		err = json.Unmarshal(entry.val, &result)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 	} else {
 		resp, err := http.Get(locations_url)
 		if err != nil {
 			log.Fatalf("error getting location: %v", err)
 		}
 		defer resp.Body.Close()
-
 		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		entry := CacheEntry{
 			createdAt: time.Now(),
 			val:       data,
 		}
-
 		go PCache.Add(locations_url, entry, mux)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		err = json.Unmarshal(data, &result)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	
 	return result.Results
 }
 
@@ -97,7 +90,7 @@ func getLocation(location string) []Pokemon {
 		if err != nil {
 			log.Fatal(err)
 		}
-		
+
 		err = json.Unmarshal([]byte(data), &encountersResult)
 		if err != nil {
 			log.Fatal(err)
@@ -108,10 +101,45 @@ func getLocation(location string) []Pokemon {
 	}
 }
 
+func getstats(pokemon string) []Stat {
 
+	pokemon_url = pokemon_url + pokemon
+	mux := &sync.RWMutex{}
+	if PCache.Exist(pokemon_url) {
+		entry, err := PCache.Get(pokemon_url, mux)
 
+		err = json.Unmarshal(entry.val, &statsResult)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return statsResult.getStats()
+	} else {
+		resp, err := http.Get(pokemon_url)
+		if err != nil {
+			log.Fatalf("error getting location: %v", err)
+		}
+		defer resp.Body.Close()
 
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
 
+		entry := CacheEntry{
+			createdAt: time.Now(),
+			val:       data,
+		}
 
+		go PCache.Add(pokemon_url, entry, mux)
+		if err != nil {
+			log.Fatal(err)
+		}
 
+		err = json.Unmarshal([]byte(data), &statsResult)
+		if err != nil {
+			log.Fatal(err)
+		}
 
+		return statsResult.getStats()
+	}
+}

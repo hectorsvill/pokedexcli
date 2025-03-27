@@ -1,6 +1,5 @@
 package main
 
-
 type Result struct {
 	Count    int        `json:"count"`
 	Next     string     `json:"next"`
