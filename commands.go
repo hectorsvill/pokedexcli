@@ -92,6 +92,7 @@ func Explore() error {
 		return errors.New("Explore(): input error")
 	}
 	pokemons := getLocation(InputArr[1])
+	fmt.Println()
 	for _, p := range pokemons {
 		fmt.Printf("- %v\n", p.Name)
 	}
