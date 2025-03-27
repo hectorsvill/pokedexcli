@@ -11,6 +11,7 @@ type CliCommand struct {
 	name        string
 	description string
 	callback    func() error
+	callbackWinput func(string) error
 }
 
 func (cm CliCommand) Init() {
@@ -35,6 +36,11 @@ func (cm CliCommand) Init() {
 			description: "print previous locations",
 			callback:    MapBack,
 		},
+		"explore": {
+			name:        "explore",
+			description: "print pokemon in location",
+			callback:    Explore,
+		},
 	}
 }
 
@@ -55,3 +61,4 @@ func Usage() error {
 	}
 	return nil
 }
+

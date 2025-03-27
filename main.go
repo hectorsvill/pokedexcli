@@ -13,6 +13,10 @@ func init() {
 	PokeCache{}.Init()
 }
 
+var (
+	InputArr []string
+)
+
 func main() {
 	pokedexcli()
 	block := make(chan struct{})
@@ -26,8 +30,8 @@ func pokedexcli() {
 		fmt.Print("pokedexcli > ")
 		scanner.Scan()
 		str := scanner.Text()
-		inputArr := strings.Fields(str)
-		command := inputArr[0]
+		InputArr = strings.Fields(str)
+		command := InputArr[0]
 		if cmd, ok := cliCommands[command]; ok {
 			if err := cmd.callback(); err != nil {
 				log.Println("Error", err)
