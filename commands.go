@@ -58,7 +58,7 @@ func (cm CliCommand) Init() {
 }
 
 func commandExit() error {
-	fmt.Println("Closing the Pokedex... Goodbye!")
+	fmt.Println("\nClosing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
@@ -130,7 +130,7 @@ func Catch() error {
 	stats := getStats(pokemon)
 	time.Sleep(500 * time.Millisecond)
 	hpBaseStat := stats[0].Base_Stat	
-	randVal := rand.Intn(10)
+	randVal := rand.Intn(hpBaseStat)
 	if randVal > hpBaseStat/2 {
 		fmt.Printf("%v was caught!\n", pokemon)
 	} else {
