@@ -10,7 +10,7 @@ type Stats struct {
 }
 
 type Stat struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
 	Base_Stat int
 }
 
@@ -19,8 +19,6 @@ func (sr StatsResult) getStats() []Stat {
 	for _, stat := range sr.StatsResult {
 		stat.Stat.Base_Stat = stat.Base_Stat
 		stats = append(stats, stat.Stat)
-
 	}
 	return stats
 }
-

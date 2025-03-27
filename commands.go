@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
+	"time"
 )
 
 var cliCommands map[string]CliCommand
@@ -46,6 +48,11 @@ func (cm CliCommand) Init() {
 			name:        "inspect",
 			description: "print pokemon stats",
 			callback:    Inspect,
+		},
+		"catch": {
+			name:        "catch",
+			description: "try catching a pokemon",
+			callback:    Catch,
 		},
 	}
 }
@@ -102,15 +109,33 @@ func Explore() error {
 	return nil
 }
 
-
 func Inspect() error {
 	if len(InputArr) != 2 {
 		return errors.New("Inspect(): input error")
 	}
 
-	stats := getstats(InputArr[1])
+	stats := getStats(InputArr[1])
 	for _, stat := range stats {
 		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
 	}
+	return nil
+}
+
+func Catch() error {
+	if len(InputArr) != 2 {
+		return errors.New("Catch(): input error\n")
+	}
+	pokemon := InputArr[1]
+	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
+	stats := getStats(pokemon)
+	time.Sleep(500 * time.Millisecond)
+	hpBaseStat := stats[0].Base_Stat	
+	randVal := rand.Intn(10)
+	if randVal > hpBaseStat/2 {
+		fmt.Printf("%v was caught!\n", pokemon)
+	} else {
+		fmt.Printf("%v escaped!\n", pokemon)
+	}
+
 	return nil
 }
