@@ -7,9 +7,7 @@ import (
 	"time"
 )
 
-func (c Client)getLocations(locationsUrl string) []Location {
-	mux := &sync.RWMutex{}
-
+func (c Client)getLocations() []Location {
 	if PCache.Exist(locationsUrl) {
 		entry, err := PCache.Get(locationsUrl, mux)
 		err = json.Unmarshal(entry.val, &result)
