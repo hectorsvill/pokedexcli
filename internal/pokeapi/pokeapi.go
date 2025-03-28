@@ -14,8 +14,11 @@ var (
 	result           *Result
 	encountersResult *PokemonEncounterResult
 	statsResult      *StatsResult
+)
+
+const (
 	locations_url    = "https://pokeapi.co/api/v2/location-area/"
-	pokemon_url      = "https://pokeapi.co/api/v2/pokemon/"
+	pokemon_url      = "https://pokeapi.co/api/v2/pokemon/"	
 )
 
 func getLocations(locations_url string) []Location {
