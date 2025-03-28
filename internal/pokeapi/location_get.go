@@ -7,8 +7,9 @@ import (
 )
 
 func (c Client)GetLocations(url string) []Location {
-	locations := []Location{}
+	
 	if val, ok := c.pokecache.Get(url); ok {
+		locations := []Location{}
 		err := json.Unmarshal(val, &locations)
 		if err != nil {
 			panic(err)
@@ -33,12 +34,14 @@ func (c Client)GetLocations(url string) []Location {
 		panic(err)
 	}
 
-	err = json.Unmarshal(data, &locations)
+	result := Result{}
+
+	err = json.Unmarshal(data, &result)
 	if err != nil {
 		panic(err)
 	}
 
-	go c.pokecache.Add(url, data)
+	c.pokecache.Add(url, data)
 	
-	return locations
+	return result.Results
 }
