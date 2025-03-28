@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"time"
 )
 
-func (c Client)getLocations() []Location {
-	if PCache.Exist(locationsUrl) {
-		entry, err := PCache.Get(locationsUrl, mux)
-		err = json.Unmarshal(entry.val, &result)
+func (c Client)GetLocations(url string) []Location {
+	locations := []Location{}
+	if val, ok := c.pokecache.Get(url); ok {
+		err := json.Unmarshal(val, &locations)
 		if err != nil {
 			panic(err)
 		}
+		return locations
 	}
 
-	req, err := http.NewRequest("GET", locationsUrl, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -32,20 +32,13 @@ func (c Client)getLocations() []Location {
 	if err != nil {
 		panic(err)
 	}
+
+	err = json.Unmarshal(data, &locations)
+	if err != nil {
+		panic(err)
+	}
+
+	go c.pokecache.Add(url, data)
 	
-	entry := CacheEntry{
-		createdAt: time.Now(),
-		val:       data,
-	}
-
-	go PCache.Add(locationsUrl, entry, mux)
-	if err != nil {
-		panic(err)
-	}
-	err = json.Unmarshal(data, &result)
-	if err != nil {
-		panic(err)
-	}
-
-	return result.Results
+	return locations
 }
