@@ -1,4 +1,4 @@
-package main
+package pokeapi
 
 type Result struct {
 	Count    int        `json:"count"`
