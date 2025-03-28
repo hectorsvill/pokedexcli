@@ -29,29 +29,30 @@ func getLocations(locationsUrl string) []Location {
 		if err != nil {
 			log.Fatal(err)
 		}
-	} else {
-		resp, err := http.Get(locationsUrl)
-		if err != nil {
-			log.Fatalf("error getting location: %v", err)
-		}
-		defer resp.Body.Close()
-		data, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-		entry := CacheEntry{
-			createdAt: time.Now(),
-			val:       data,
-		}
-		go PCache.Add(locationsUrl, entry, mux)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = json.Unmarshal(data, &result)
-		if err != nil {
-			log.Fatal(err)
-		}
 	}
+
+	resp, err := http.Get(locationsUrl)
+	if err != nil {
+		log.Fatalf("error getting location: %v", err)
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	entry := CacheEntry{
+		createdAt: time.Now(),
+		val:       data,
+	}
+	go PCache.Add(locationsUrl, entry, mux)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return result.Results
 }
 
@@ -72,36 +73,36 @@ func getLocation(location string) []Pokemon {
 			log.Fatal(err)
 		}
 		return encountersResult.getPokemon()
-	} else {
-		resp, err := http.Get(location)
-		if err != nil {
-			log.Fatalf("error getting location: %v", err)
-		}
-		defer resp.Body.Close()
-
-		data, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		entry := CacheEntry{
-			createdAt: time.Now(),
-			val:       data,
-		}
-
-		go PCache.Add(location, entry, mux)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = json.Unmarshal([]byte(data), &encountersResult)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		//fmt.Println(encountersResult.PokemonEncounters[0].Pokemon.Name)
-		return encountersResult.getPokemon()
 	}
+
+	resp, err := http.Get(location)
+	if err != nil {
+		log.Fatalf("error getting location: %v", err)
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	entry := CacheEntry{
+		createdAt: time.Now(),
+		val:       data,
+	}
+
+	go PCache.Add(location, entry, mux)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal([]byte(data), &encountersResult)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//fmt.Println(encountersResult.PokemonEncounters[0].Pokemon.Name)
+	return encountersResult.getPokemon()
 }
 
 func getStats(pokemon string) []Stat {
@@ -114,33 +115,34 @@ func getStats(pokemon string) []Stat {
 			log.Fatal(err)
 		}
 		return statsResult.getStats()
-	} else {
-		resp, err := http.Get(pokemonUrl)
-		if err != nil {
-			log.Fatalf("error getting location: %v", err)
-		}
-		defer resp.Body.Close()
-
-		data, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		entry := CacheEntry{
-			createdAt: time.Now(),
-			val:       data,
-		}
-
-		go PCache.Add(pokemon, entry, mux)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = json.Unmarshal([]byte(data), &statsResult)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		return statsResult.getStats()
 	}
+	
+	resp, err := http.Get(pokemonUrl)
+	if err != nil {
+		log.Fatalf("error getting location: %v", err)
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	entry := CacheEntry{
+		createdAt: time.Now(),
+		val:       data,
+	}
+
+	go PCache.Add(pokemon, entry, mux)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal([]byte(data), &statsResult)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return statsResult.getStats()
+
 }
