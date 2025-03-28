@@ -20,9 +20,10 @@ type config struct {
 
 func main() {
 	cfg := &config{
-		inputArr:     []string{},
-		client:       pokeapi.NewClient(5 * time.Second),
-		nextLocation: pokeapi.LocationsUrl,
+		inputArr:         []string{},
+		client:           pokeapi.NewClient(5 * time.Second),
+		nextLocation:     pokeapi.LocationsUrl,
+		previousLocation: pokeapi.LocationsUrl,
 	}
 
 	pokedexcli(cfg)
