@@ -17,16 +17,20 @@ type cacheEntry struct {
 	val       []byte
 }
 
-func (pk PokeCache) Init() {
-	PCache = PokeCache{
+func (pk PokeCache) New() PokeCache {
+	return PokeCache {
 		cache: make(map[string]cacheEntry),
+		mux: &sync.Mutex{},
 	}
 }
 
-func (pk PokeCache) Add(url string, entry cacheEntry, mux *sync.RWMutex) {
-	mux.RLock()
-	PCache.cache[url] = entry
-	mux.RUnlock()
+func (pk PokeCache) Add(key string, value []byte) {
+	pk.mux.Lock()
+	defer pk.mux.Unlock()
+	PCache.cache[key] = cacheEntry{
+		createdAt: time.Now().UTC(),
+		val: value, 
+	}
 }
 
 func (pk PokeCache) Get(url string, mux *sync.RWMutex) (cacheEntry, error) {
