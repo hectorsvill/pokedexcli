@@ -32,11 +32,11 @@ func getCliCommands() map[string]CliCommand {
 			description: "print next locations",
 			callback:    MapNext,
 		},
-		// "mapb": {
-		// 	name:        "mapb",
-		// 	description: "print previous locations",
-		// 	callback:    MapBack,
-		// },
+		"mapb": {
+			name:        "mapb",
+			description: "print previous locations",
+			callback:    MapBack,
+		},
 		// "explore": {
 		// 	name:        "explore",
 		// 	description: "print pokemon in location",
@@ -81,6 +81,8 @@ func MapNext(cfg *config) error {
 	result := cfg.client.GetLocations(cfg.nextLocation)
 
 	cfg.nextLocation = result.Next
+	cfg.previousLocation= result.Previous
+
 
 	for _, location := range result.Results {
 		fmt.Println(location.Name)
@@ -89,16 +91,22 @@ func MapNext(cfg *config) error {
 	return nil
 }
 
-// func MapBack() error {
-// 	if result.Previous == "" {
-// 		locations := getLocations(locations_url)
-// 		printLocations(locations)
-// 	} else {
-// 		locations := getLocations(result.Previous)
-// 		printLocations(locations)
-// 	}
-// 	return nil
-// }
+func MapBack(cfg *config) error {
+	if len(cfg.inputArr) != 1 {
+		panic("input error")
+	}
+
+	result := cfg.client.GetLocations(cfg.previousLocation)
+
+	cfg.nextLocation = result.Next
+	cfg.previousLocation= result.Previous
+
+	for _, location := range result.Results {
+		fmt.Println(location.Name)
+	}
+
+	return nil
+}
 
 // func Explore() error {
 // 	if len(InputArr) != 2 {
