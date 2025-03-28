@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c Client)GetLocations(url string) Result {
+func (c Client) GetLocations(url string) Result {
 	res := Result{}
 	if val, ok := c.cache.Get(url); ok {
 		err := json.Unmarshal(val, &res)
@@ -20,13 +20,13 @@ func (c Client)GetLocations(url string) Result {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
-	
+
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
@@ -38,6 +38,6 @@ func (c Client)GetLocations(url string) Result {
 	}
 
 	c.cache.Add(url, data)
-	
+
 	return res
 }

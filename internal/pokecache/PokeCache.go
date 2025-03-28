@@ -7,7 +7,7 @@ import (
 
 type PokeCache struct {
 	cache map[string]cacheEntry
-	mux *sync.Mutex
+	mux   *sync.Mutex
 }
 
 type cacheEntry struct {
@@ -16,9 +16,9 @@ type cacheEntry struct {
 }
 
 func NewPokeCache() PokeCache {
-	return PokeCache {
+	return PokeCache{
 		cache: make(map[string]cacheEntry),
-		mux: &sync.Mutex{},
+		mux:   &sync.Mutex{},
 	}
 }
 
@@ -27,7 +27,7 @@ func (pk PokeCache) Add(key string, value []byte) {
 	defer pk.mux.Unlock()
 	pk.cache[key] = cacheEntry{
 		createdAt: time.Now().UTC(),
-		val: value, 
+		val:       value,
 	}
 }
 

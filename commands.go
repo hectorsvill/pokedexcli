@@ -6,16 +6,13 @@ import (
 	// "math/rand"
 	"os"
 	// "time"
-
 	// "github.com/hectorsvill/pokedexcli/internal/pokeapi"
-
 )
 
-
 type CliCommand struct {
-	name           string
-	description    string
-	callback       func(*config) error
+	name        string
+	description string
+	callback    func(*config) error
 }
 
 func getCliCommands() map[string]CliCommand {
@@ -58,7 +55,7 @@ func getCliCommands() map[string]CliCommand {
 	}
 }
 
-func (cmd CliCommand)helpString() string {
+func (cmd CliCommand) helpString() string {
 	return fmt.Sprintf("%s: %s", cmd.name, cmd.description)
 }
 
@@ -80,7 +77,7 @@ func MapNext(cfg *config) error {
 	if len(cfg.inputArr) != 1 {
 		panic("input error")
 	}
-	
+
 	result := cfg.client.GetLocations(cfg.nextLocation)
 
 	cfg.nextLocation = result.Next
@@ -88,8 +85,6 @@ func MapNext(cfg *config) error {
 	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
-
-
 
 	return nil
 }
@@ -137,7 +132,7 @@ func MapNext(cfg *config) error {
 // 	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
 
 // 	stats := getStats(InputArr[0])
-// 	hpBaseStat := stats[0].Base_Stat 
+// 	hpBaseStat := stats[0].Base_Stat
 
 // 	time.Sleep(500 * time.Millisecond)
 // 	randVal := rand.Intn(hpBaseStat)
