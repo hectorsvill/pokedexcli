@@ -1,4 +1,4 @@
-package main
+package pokeapi
 
 type PokemonEncounterResult struct {
 	PokemonEncounters []PokemonEncounter `json:"pokemon_encounters"`
