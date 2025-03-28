@@ -17,20 +17,20 @@ var (
 )
 
 const (
-	locations_url    = "https://pokeapi.co/api/v2/location-area/"
-	pokemon_url      = "https://pokeapi.co/api/v2/pokemon/"	
+	locationsUrl    = "https://pokeapi.co/api/v2/location-area/"
+	pokemonUrl      = "https://pokeapi.co/api/v2/pokemon/"	
 )
 
-func getLocations(locations_url string) []Location {
+func getLocations(locationsUrl string) []Location {
 	mux := &sync.RWMutex{}
-	if PCache.Exist(locations_url) {
-		entry, err := PCache.Get(locations_url, mux)
+	if PCache.Exist(locationsUrl) {
+		entry, err := PCache.Get(locationsUrl, mux)
 		err = json.Unmarshal(entry.val, &result)
 		if err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		resp, err := http.Get(locations_url)
+		resp, err := http.Get(locationsUrl)
 		if err != nil {
 			log.Fatalf("error getting location: %v", err)
 		}
@@ -43,7 +43,7 @@ func getLocations(locations_url string) []Location {
 			createdAt: time.Now(),
 			val:       data,
 		}
-		go PCache.Add(locations_url, entry, mux)
+		go PCache.Add(locationsUrl, entry, mux)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -62,7 +62,7 @@ func printLocations(locations []Location) {
 }
 
 func getLocation(location string) []Pokemon {
-	location = locations_url + location
+	location = locationsUrl + location
 	mux := &sync.RWMutex{}
 	if PCache.Exist(location) {
 		entry, err := PCache.Get(location, mux)
@@ -106,7 +106,7 @@ func getLocation(location string) []Pokemon {
 
 func getStats(pokemon string) []Stat {
 	mux := &sync.RWMutex{}
-	pokemon_url = pokemon_url + pokemon
+	pokemonUrl = pokemonUrl + pokemon
 	if PCache.Exist(pokemon) {
 		entry, err := PCache.Get(pokemon, mux)
 		err = json.Unmarshal([]byte(entry.val), &statsResult)
@@ -115,7 +115,7 @@ func getStats(pokemon string) []Stat {
 		}
 		return statsResult.getStats()
 	} else {
-		resp, err := http.Get(pokemon_url)
+		resp, err := http.Get(pokemonUrl)
 		if err != nil {
 			log.Fatalf("error getting location: %v", err)
 		}
