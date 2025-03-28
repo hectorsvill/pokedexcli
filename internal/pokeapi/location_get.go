@@ -6,22 +6,20 @@ import (
 	"net/http"
 )
 
-func (c Client)GetLocations(url string) []Location {
-	
-	if val, ok := c.pokecache.Get(url); ok {
-		locations := []Location{}
-		err := json.Unmarshal(val, &locations)
+func (c Client)GetLocations(url string) Result {
+	res := Result{}
+	if val, ok := c.cache.Get(url); ok {
+		err := json.Unmarshal(val, &res)
 		if err != nil {
 			panic(err)
 		}
-		return locations
+		return res
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		panic(err)
 	}
-	defer req.Body.Close()
 	
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -34,14 +32,12 @@ func (c Client)GetLocations(url string) []Location {
 		panic(err)
 	}
 
-	result := Result{}
-
-	err = json.Unmarshal(data, &result)
+	err = json.Unmarshal(data, &res)
 	if err != nil {
 		panic(err)
 	}
 
-	c.pokecache.Add(url, data)
+	c.cache.Add(url, data)
 	
-	return result.Results
+	return res
 }
