@@ -4,9 +4,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"time"
 )
-
-
 
 func (c Client)getLocations(locationsUrl string) []Location {
 	mux := &sync.RWMutex{}
@@ -35,10 +34,12 @@ func (c Client)getLocations(locationsUrl string) []Location {
 	if err != nil {
 		panic(err)
 	}
+	
 	entry := CacheEntry{
 		createdAt: time.Now(),
 		val:       data,
 	}
+
 	go PCache.Add(locationsUrl, entry, mux)
 	if err != nil {
 		panic(err)
