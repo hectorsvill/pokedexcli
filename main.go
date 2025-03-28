@@ -6,38 +6,50 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/hectorsvill/pokedexcli/internal/pokeapi"
+	
 )
 
-func init() {
-	CliCommand{}.Init()
-	PokeCache{}.Init()
+
+type config struct {
+	inputArr []string
+	client pokeapi.Client
+	nextLocation string
+	previousLocation string
 }
-
-var (
-	InputArr []string
-)
 
 func main() {
-	pokedexcli()
-	block := make(chan struct{})
-	<-block
+	cfg := &config{
+		inputArr: []string{},
+		client: pokeapi.NewClient(5*time.Second),
+		nextLocation: pokeapi.LocationsUrl,
+	}
+
+	pokedexcli(cfg)
 }
 
-func pokedexcli() {
+func pokedexcli(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
+	CliCommands := getCliCommands()
 
 	for {
 		fmt.Print("pokedexcli > ")
 		scanner.Scan()
+		
 		str := scanner.Text()
-		InputArr = strings.Fields(str)
-		command := InputArr[0]
-		if cmd, ok := cliCommands[command]; ok {
-			if err := cmd.callback(); err != nil {
+		str = strings.ToLower(str)
+		cfg.inputArr = strings.Fields(str)
+
+		command := cfg.inputArr[0]
+		
+		if cmd, ok := CliCommands[command]; ok {
+			if err := cmd.callback(cfg); err != nil {
 				log.Println("Error", err)
 			}
 		} else {
-			Usage()
+			Usage(cfg)
 		}
 	}
 }
