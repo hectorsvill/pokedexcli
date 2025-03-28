@@ -104,9 +104,8 @@ func getLocation(location string) []Pokemon {
 func getStats(pokemon string) []Stat {
 	mux := &sync.RWMutex{}
 	pokemon_url = pokemon_url + pokemon
-	if PCache.Exist(pokemon_url) {
-		entry, err := PCache.Get(pokemon_url, mux)
-		
+	if PCache.Exist(pokemon) {
+		entry, err := PCache.Get(pokemon, mux)
 		err = json.Unmarshal([]byte(entry.val), &statsResult)
 		if err != nil {
 			log.Fatal(err)
@@ -129,7 +128,7 @@ func getStats(pokemon string) []Stat {
 			val:       data,
 		}
 
-		go PCache.Add(pokemon_url, entry, mux)
+		go PCache.Add(pokemon, entry, mux)
 		if err != nil {
 			log.Fatal(err)
 		}

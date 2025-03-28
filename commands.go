@@ -127,11 +127,13 @@ func Catch() error {
 	}
 	pokemon := InputArr[1]
 	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
-	stats := getStats(pokemon)
+
+	stats := getStats(InputArr[0])
+	hpBaseStat := stats[0].Base_Stat 
+
 	time.Sleep(500 * time.Millisecond)
-	hpBaseStat := stats[0].Base_Stat	
 	randVal := rand.Intn(hpBaseStat)
-	if randVal > hpBaseStat/2 {
+	if randVal > hpBaseStat/2 - 7  {
 		fmt.Printf("%v was caught!\n", pokemon)
 	} else {
 		fmt.Printf("%v escaped!\n", pokemon)
