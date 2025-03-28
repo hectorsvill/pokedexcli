@@ -1,25 +1,12 @@
 package pokeapi
 
-// import (
-// 	"encoding/json"
-// 	"fmt"
-// 	"io"
-// 	"log"
-// 	"net/http"
-// 	"sync"
-// 	"time"
-// )
-
-// var (
-// 	result           *Result
-// 	encountersResult *PokemonEncounterResult
-// 	statsResult      *StatsResult
-// )
 
 const (
-	locationsUrl    = "https://pokeapi.co/api/v2/location-area/"
+	LocationsUrl    = "https://pokeapi.co/api/v2/location-area/"
 	pokemonUrl      = "https://pokeapi.co/api/v2/pokemon/"	
 )
+
+
 
 // func getLocations(locationsUrl string) []Location {
 // 	mux := &sync.RWMutex{}
