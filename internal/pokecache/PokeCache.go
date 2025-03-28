@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-var PCache PokeCache
-
 type PokeCache struct {
 	cache map[string]cacheEntry
 	mux *sync.Mutex
@@ -17,7 +15,7 @@ type cacheEntry struct {
 	val       []byte
 }
 
-func (pk PokeCache) New() PokeCache {
+func NewPokeCache() PokeCache {
 	return PokeCache {
 		cache: make(map[string]cacheEntry),
 		mux: &sync.Mutex{},
@@ -27,7 +25,7 @@ func (pk PokeCache) New() PokeCache {
 func (pk PokeCache) Add(key string, value []byte) {
 	pk.mux.Lock()
 	defer pk.mux.Unlock()
-	PCache.cache[key] = cacheEntry{
+	pk.cache[key] = cacheEntry{
 		createdAt: time.Now().UTC(),
 		val: value, 
 	}
@@ -36,12 +34,12 @@ func (pk PokeCache) Add(key string, value []byte) {
 func (pk PokeCache) Get(key string) ([]byte, bool) {
 	pk.mux.Lock()
 	defer pk.mux.Unlock()
-	entry, ok := PCache.cache[key]
+	entry, ok := pk.cache[key]
 	return entry.val, ok
 }
 
 func (pk PokeCache) Exist(url string) bool {
-	_, ok := PCache.cache[url]
+	_, ok := pk.cache[url]
 	if ok {
 		return true
 	}
