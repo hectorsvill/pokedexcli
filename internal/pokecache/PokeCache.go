@@ -33,11 +33,11 @@ func (pk PokeCache) Add(key string, value []byte) {
 	}
 }
 
-func (pk PokeCache) Get(url string, mux *sync.RWMutex) (cacheEntry, error) {
-	mux.RLock()
-	entry := PCache.cache[url]
-	mux.RUnlock()
-	return entry, nil
+func (pk PokeCache) Get(key string) ([]byte, bool) {
+	pk.mux.Lock()
+	defer pk.mux.Unlock()
+	entry, ok := PCache.cache[key]
+	return entry.val, ok
 }
 
 func (pk PokeCache) Exist(url string) bool {
