@@ -41,3 +41,41 @@ func (c Client) GetLocations(url string) Result {
 
 	return res
 }
+
+func (c Client) GetLocation(location string) []Pokemon {
+	res := PokemonEncounterResult{}
+	location = LocationsUrl + location
+	if val, ok := c.cache.Get(location); ok {
+		err := json.Unmarshal(val, &res)
+		if err != nil {
+			panic(err)
+		}
+
+		return res.getPokemon()
+	}
+
+	req, err := http.NewRequest("GET", location, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		panic(err)
+	}
+
+	c.cache.Add(location, data)
+
+	return res.getPokemon()
+}

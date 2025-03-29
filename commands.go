@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "errors"
+	"errors"
 	"fmt"
 	// "math/rand"
 	"os"
@@ -37,11 +37,11 @@ func getCliCommands() map[string]CliCommand {
 			description: "print previous locations",
 			callback:    MapBack,
 		},
-		// "explore": {
-		// 	name:        "explore",
-		// 	description: "print pokemon in location",
-		// 	callback:    Explore,
-		// },
+		"explore": {
+			name:        "explore",
+			description: "print pokemon in location",
+			callback:    Explore,
+		},
 		// "inspect": {
 		// 	name:        "inspect",
 		// 	description: "print pokemon stats",
@@ -107,17 +107,17 @@ func MapBack(cfg *config) error {
 	return nil
 }
 
-// func Explore() error {
-// 	if len(InputArr) != 2 {
-// 		return errors.New("Explore(): input error")
-// 	}
-// 	pokemons := getLocation(InputArr[1])
-// 	fmt.Println()
-// 	for _, p := range pokemons {
-// 		fmt.Printf("- %v\n", p.Name)
-// 	}
-// 	return nil
-// }
+func Explore(cfg *config) error {
+	if len(cfg.inputArr) != 2 {
+		return errors.New("Explore(): input error")
+	}
+	pokemons := cfg.client.GetLocation(cfg.inputArr[1])
+	fmt.Println()
+	for _, p := range pokemons {
+		fmt.Printf("- %v\n", p.Name)
+	}
+	return nil
+}
 
 // func Inspect() error {
 // 	if len(InputArr) != 2 {
