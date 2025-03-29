@@ -5,14 +5,64 @@ pokedexcli is a Pokedex in a command-line REPL using the [PokeAPI](https://pokea
 - [parse JSON](https://github.com/hectorsvill/pokedexcli/blob/main/internal/pokeapi/types_pokemon.go)
 - [Cache struct](https://github.com/hectorsvill/pokedexcli/blob/main/internal/pokecache/PokeCache.go) to hold a map[string]cacheEntry and a mutex to protect the map across goroutines
 
-  
-#### Download and run:
+## main.go
+- The config struct holds application state and configuration.
+```go
+type config struct {
+	inputArr         	[]string
+	client           	pokeapi.Client
+	nextLocation     	string
+	previousLocation 	string
+	pokedex				map[string]pokeapi.Pokemon
+}
+```
+-  The main function initializes the application and starts the CLI interface.
+```go
+func main() {
+	cfg := &config{
+		inputArr:         	[]string{},
+		client:           	pokeapi.NewClient(5 * time.Second),
+		nextLocation:     	pokeapi.LocationsUrl,
+		previousLocation: 	pokeapi.LocationsUrl,
+		pokedex:			make(map[string]pokeapi.Pokemon),
+	}
+
+	pokedexcli(cfg)
+}
+```
+- The pokedexcli function handles the command-line interface and processes user input.
+```go
+func pokedexcli(cfg *config) {
+	scanner := bufio.NewScanner(os.Stdin)
+	CliCommands := getCliCommands()
+
+	for {
+		fmt.Print("pokedexcli > ")
+		scanner.Scan()
+
+		str := scanner.Text()
+		str = strings.ToLower(str)
+		cfg.inputArr = strings.Fields(str)
+
+		command := cfg.inputArr[0]
+
+		if cmd, ok := CliCommands[command]; ok {
+			if err := cmd.callback(cfg); err != nil {
+				log.Println("Error", err)
+			}
+		} else {
+			Usage(cfg)
+		}
+	}
+}
+```
+## Download and run:
 ```bash
 git clone https://github.com/hectorsvill/pokedexcli.git
 cd pokedexcli
 go run .
 ```
-#### Example usage: 
+## Example usage: 
 ##### help
 Get usage information
 ```bash
