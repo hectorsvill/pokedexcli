@@ -56,8 +56,8 @@ func getCliCommands() map[string]CliCommand {
 		},
 		"pokedex": {
 			name:        "pokedex",
-			description: "my pokemon",
-			callback:    Catch,
+			description: "get my pokemon",
+			callback:    getPokedex,
 		},
 	}
 }
@@ -189,6 +189,18 @@ func Catch(cfg *config) error {
 		}
 	} else {
 		fmt.Printf("%v escaped!\n", pokemon)
+	}
+
+	return nil
+}
+
+func getPokedex(cfg *config) error {
+
+	if len(cfg.pokedex) == 0 {
+		fmt.Println("...pokedex is empty")
+	}
+	for key, _ := range cfg.pokedex {
+		fmt.Printf(" - %v\n", key)
 	}
 
 	return nil
