@@ -13,7 +13,6 @@ func (c Client) GetLocations(url string) Result {
 		if err != nil {
 			panic(err)
 		}
-		return res
 	}
 
 	req, err := http.NewRequest("GET", url, nil)

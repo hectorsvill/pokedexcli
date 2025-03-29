@@ -42,11 +42,11 @@ func getCliCommands() map[string]CliCommand {
 			description: "print pokemon in location",
 			callback:    Explore,
 		},
-		// "inspect": {
-		// 	name:        "inspect",
-		// 	description: "print pokemon stats",
-		// 	callback:    Inspect,
-		// },
+		"inspect": {
+			name:        "inspect",
+			description: "print pokemon stats",
+			callback:    Inspect,
+		},
 		// "catch": {
 		// 	name:        "catch",
 		// 	description: "try catching a pokemon",
@@ -119,17 +119,18 @@ func Explore(cfg *config) error {
 	return nil
 }
 
-// func Inspect() error {
-// 	if len(InputArr) != 2 {
-// 		return errors.New("Inspect(): input error")
-// 	}
+func Inspect(cfg *config) error {
+	if len(cfg.inputArr) != 2 {
+		return errors.New("Inspect(): input error")
+	}
 
-// 	stats := getStats(InputArr[1])
-// 	for _, stat := range stats {
-// 		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
-// 	}
-// 	return nil
-// }
+	stats := cfg.client.GetStats(cfg.inputArr[1])
+	for _, stat := range stats {
+		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
+	}
+
+	return nil
+}
 
 // func Catch() error {
 // 	if len(InputArr) != 2 {
