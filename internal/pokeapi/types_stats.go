@@ -12,7 +12,6 @@ type Stats struct {
 type Stat struct {
 	Name      string `json:"name"`
 	Base_Stat int
-
 }
 
 func (sr StatsResult) GetStats() []Stat {

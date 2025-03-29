@@ -93,7 +93,7 @@ func MapNext(cfg *config) error {
 
 	cfg.nextLocation = result.Next
 	cfg.previousLocation = result.Previous
-	
+
 	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
@@ -111,13 +111,13 @@ func MapBack(cfg *config) error {
 		fmt.Println(err)
 		return err
 	}
-	
+
 	cfg.nextLocation = result.Next
-	
+
 	if cfg.previousLocation != "" {
 		cfg.previousLocation = result.Previous
 	}
-	
+
 	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
