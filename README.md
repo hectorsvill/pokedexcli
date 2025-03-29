@@ -1,10 +1,11 @@
 pokedexcli is a Pokedex in a command-line REPL using the [PokeAPI](https://pokeapi.co/).
 
 ### Project features
-- HTTP requests
-- parse JSON 
+- [HTTP requests](https://github.com/hectorsvill/pokedexcli/tree/main/internal/pokeapi)
+- [parse JSON](https://github.com/hectorsvill/pokedexcli/blob/main/internal/pokeapi/types_pokemon.go)
 - [Cache struct](https://github.com/hectorsvill/pokedexcli/blob/main/internal/pokecache/PokeCache.go) to hold a map[string]cacheEntry and a mutex to protect the map across goroutines
 
+  
 #### Download and run:
 ```bash
 git clone https://github.com/hectorsvill/pokedexcli.git
