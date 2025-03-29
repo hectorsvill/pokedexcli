@@ -3,9 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	// "math/rand"
+	"math/rand"
 	"os"
-	// "time"
+	"time"
 	// "github.com/hectorsvill/pokedexcli/internal/pokeapi"
 )
 
@@ -47,11 +47,11 @@ func getCliCommands() map[string]CliCommand {
 			description: "print pokemon stats",
 			callback:    Inspect,
 		},
-		// "catch": {
-		// 	name:        "catch",
-		// 	description: "try catching a pokemon",
-		// 	callback:    Catch,
-		// },
+		"catch": {
+			name:        "catch",
+			description: "try catching a pokemon",
+			callback:    Catch,
+		},
 	}
 }
 
@@ -124,7 +124,7 @@ func Inspect(cfg *config) error {
 		return errors.New("Inspect(): input error")
 	}
 
-	stats := cfg.client.GetStats(cfg.inputArr[1])
+	stats,_ := cfg.client.GetStats(cfg.inputArr[1])
 	for _, stat := range stats {
 		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
 	}
@@ -132,23 +132,33 @@ func Inspect(cfg *config) error {
 	return nil
 }
 
-// func Catch() error {
-// 	if len(InputArr) != 2 {
-// 		return errors.New("Catch(): input error\n")
-// 	}
-// 	pokemon := InputArr[1]
-// 	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
+func Catch(cfg *config) error {
+	if len(cfg.inputArr) != 2 {
+		return errors.New("Catch(): input error\n")
+	}
+	
+	pokemon := cfg.inputArr[1]
+	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
 
-// 	stats := getStats(InputArr[0])
-// 	hpBaseStat := stats[0].Base_Stat
+	stats, err := cfg.client.GetStats(pokemon)
+	if err != nil {
+		fmt.Printf("\n%v is not a pokemon...\n", pokemon)
+		return nil
+	}
 
-// 	time.Sleep(500 * time.Millisecond)
-// 	randVal := rand.Intn(hpBaseStat)
-// 	if randVal > hpBaseStat/2 - 7  {
-// 		fmt.Printf("%v was caught!\n", pokemon)
-// 	} else {
-// 		fmt.Printf("%v escaped!\n", pokemon)
-// 	}
+	hpBaseStat := stats[0].Base_Stat
+	defenseStat := stats[2].Base_Stat
+	
+	time.Sleep(500 * time.Millisecond)
+	
+	randVal := rand.Intn(hpBaseStat)
+	catchRate := int(float64( hpBaseStat/2) + (0.10 * float64(defenseStat)))
 
-// 	return nil
-// }
+	if randVal > catchRate  {
+		fmt.Printf("%v was caught!\n", pokemon)
+	} else {
+		fmt.Printf("%v escaped!\n", pokemon)
+	}
+
+	return nil
+}
