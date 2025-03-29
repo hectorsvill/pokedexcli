@@ -1,4 +1,4 @@
-pokedexcli is a Pokedex in a command-line REPL usingg the [PokeAPI](https://pokeapi.co/).
+pokedexcli is a Pokedex in a command-line REPL using the [PokeAPI](https://pokeapi.co/).
 
 ### Project features
 - HTTP requests
