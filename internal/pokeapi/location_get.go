@@ -16,6 +16,9 @@ func (c Client) GetLocations(url string) (Result, error) {
 		return res, nil
 	}
 
+	if url == "" {
+		url = LocationsUrl
+	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return Result{}, err
@@ -53,7 +56,9 @@ func (c Client) GetLocation(location string) ([]Pokemon, error) {
 
 		return res.getPokemon(), nil
 	}
-
+	if location == "" {
+		location = LocationsUrl
+	}
 	req, err := http.NewRequest("GET", location, nil)
 	if err != nil {
 		return nil, err

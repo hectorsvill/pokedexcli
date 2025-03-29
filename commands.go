@@ -93,7 +93,7 @@ func MapNext(cfg *config) error {
 
 	cfg.nextLocation = result.Next
 	cfg.previousLocation = result.Previous
-
+	
 	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
@@ -111,10 +111,13 @@ func MapBack(cfg *config) error {
 		fmt.Println(err)
 		return err
 	}
-
+	
 	cfg.nextLocation = result.Next
-	cfg.previousLocation = result.Previous
-
+	
+	if cfg.previousLocation != "" {
+		cfg.previousLocation = result.Previous
+	}
+	
 	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
@@ -182,7 +185,7 @@ func Catch(cfg *config) error {
 	catchRate := int(float64(hpBaseStat/2) + (0.10 * float64(defenseStat)))
 
 	if randVal > catchRate {
-		fmt.Printf("%v was caught!\n..Added To Pokedex!\n", pokemon)
+		fmt.Println("You may now inspect it with the inspect command.")
 		cfg.pokedex[pokemon] = pokeapi.Pokemon{
 			Name: pokemon,
 			URL:  pokeapi.PokemonUrl + pokemon,
