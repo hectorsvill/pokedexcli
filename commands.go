@@ -78,7 +78,11 @@ func MapNext(cfg *config) error {
 		panic("input error")
 	}
 
-	result := cfg.client.GetLocations(cfg.nextLocation)
+	result, err := cfg.client.GetLocations(cfg.nextLocation)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 
 	cfg.nextLocation = result.Next
 	cfg.previousLocation = result.Previous
@@ -95,7 +99,11 @@ func MapBack(cfg *config) error {
 		panic("input error")
 	}
 
-	result := cfg.client.GetLocations(cfg.previousLocation)
+	result, err := cfg.client.GetLocations(cfg.previousLocation)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 
 	cfg.nextLocation = result.Next
 	cfg.previousLocation = result.Previous
@@ -111,7 +119,13 @@ func Explore(cfg *config) error {
 	if len(cfg.inputArr) != 2 {
 		return errors.New("Explore(): input error")
 	}
-	pokemons := cfg.client.GetLocation(cfg.inputArr[1])
+	
+	pokemons,err := cfg.client.GetLocation(cfg.inputArr[1])
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
 	fmt.Println()
 	for _, p := range pokemons {
 		fmt.Printf("- %v\n", p.Name)
@@ -123,8 +137,14 @@ func Inspect(cfg *config) error {
 	if len(cfg.inputArr) != 2 {
 		return errors.New("Inspect(): input error")
 	}
+	pokemon := cfg.inputArr[1]
+	stats,err := cfg.client.GetStats(pokemon)
+	if err != nil {
+		fmt.Printf("\n%v is not a pokemon...\n", pokemon)
+		return nil
+	}
 
-	stats,_ := cfg.client.GetStats(cfg.inputArr[1])
+
 	for _, stat := range stats {
 		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
 	}
