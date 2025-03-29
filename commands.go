@@ -6,6 +6,8 @@ import (
 	"math/rand"
 	"os"
 	"time"
+
+	"github.com/hectorsvill/pokedexcli/internal/pokeapi"
 	// "github.com/hectorsvill/pokedexcli/internal/pokeapi"
 )
 
@@ -38,18 +40,23 @@ func getCliCommands() map[string]CliCommand {
 			callback:    MapBack,
 		},
 		"explore": {
-			name:        "explore",
+			name:        "explore <location>",
 			description: "print pokemon in location",
 			callback:    Explore,
 		},
 		"inspect": {
-			name:        "inspect",
+			name:        "inspect <pokemon>",
 			description: "print pokemon stats",
 			callback:    Inspect,
 		},
 		"catch": {
-			name:        "catch",
+			name:        "catch <pokemon>",
 			description: "try catching a pokemon",
+			callback:    Catch,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "my pokemon",
 			callback:    Catch,
 		},
 	}
@@ -119,10 +126,11 @@ func Explore(cfg *config) error {
 	if len(cfg.inputArr) != 2 {
 		return errors.New("Explore(): input error")
 	}
-	
-	pokemons,err := cfg.client.GetLocation(cfg.inputArr[1])
+
+	location := cfg.inputArr[1]
+	pokemons, err := cfg.client.GetLocation(location)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("\n..location: %v does not exist\n", location)
 		return err
 	}
 
@@ -138,12 +146,11 @@ func Inspect(cfg *config) error {
 		return errors.New("Inspect(): input error")
 	}
 	pokemon := cfg.inputArr[1]
-	stats,err := cfg.client.GetStats(pokemon)
+	stats, err := cfg.client.GetStats(pokemon)
 	if err != nil {
 		fmt.Printf("\n%v is not a pokemon...\n", pokemon)
 		return nil
 	}
-
 
 	for _, stat := range stats {
 		fmt.Printf("  -%v: %v\n", stat.Name, stat.Base_Stat)
@@ -156,7 +163,7 @@ func Catch(cfg *config) error {
 	if len(cfg.inputArr) != 2 {
 		return errors.New("Catch(): input error\n")
 	}
-	
+
 	pokemon := cfg.inputArr[1]
 	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
 
@@ -168,14 +175,18 @@ func Catch(cfg *config) error {
 
 	hpBaseStat := stats[0].Base_Stat
 	defenseStat := stats[2].Base_Stat
-	
-	time.Sleep(500 * time.Millisecond)
-	
-	randVal := rand.Intn(hpBaseStat)
-	catchRate := int(float64( hpBaseStat/2) + (0.10 * float64(defenseStat)))
 
-	if randVal > catchRate  {
-		fmt.Printf("%v was caught!\n", pokemon)
+	time.Sleep(500 * time.Millisecond)
+
+	randVal := rand.Intn(hpBaseStat)
+	catchRate := int(float64(hpBaseStat/2) + (0.10 * float64(defenseStat)))
+
+	if randVal > catchRate {
+		fmt.Printf("%v was caught!\n..Added To Pokedex!\n", pokemon)
+		cfg.pokedex[pokemon] = pokeapi.Pokemon{
+			Name: pokemon,
+			URL:  pokeapi.PokemonUrl + pokemon,
+		}
 	} else {
 		fmt.Printf("%v escaped!\n", pokemon)
 	}

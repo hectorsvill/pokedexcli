@@ -12,18 +12,20 @@ import (
 )
 
 type config struct {
-	inputArr         []string
-	client           pokeapi.Client
-	nextLocation     string
-	previousLocation string
+	inputArr         	[]string
+	client           	pokeapi.Client
+	nextLocation     	string
+	previousLocation 	string
+	pokedex				map[string]pokeapi.Pokemon
 }
 
 func main() {
 	cfg := &config{
-		inputArr:         []string{},
-		client:           pokeapi.NewClient(5 * time.Second),
-		nextLocation:     pokeapi.LocationsUrl,
-		previousLocation: pokeapi.LocationsUrl,
+		inputArr:         	[]string{},
+		client:           	pokeapi.NewClient(5 * time.Second),
+		nextLocation:     	pokeapi.LocationsUrl,
+		previousLocation: 	pokeapi.LocationsUrl,
+		pokedex:			make(map[string]pokeapi.Pokemon),
 	}
 
 	pokedexcli(cfg)
